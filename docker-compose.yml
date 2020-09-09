@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+    build-php:
+        build: ./build
+        volumes:
+            - ../retobase-php:/code
+
+    nginx:
+        image: nginx:1.19.2-alpine
+        ports:
+            - 80:80
+        volumes:
+            - ../retobase-php:/var/www/retobase-php
+            - ./conf.d:/etc/nginx/conf.d
+        links:
+            - fpm
+        
+    fpm:
+        image: php:7.4-fpm
+        expose:
+            - 9000
+        volumes:
+            - ../retobase-php:/var/www/retobase-php
